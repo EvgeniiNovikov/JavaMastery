@@ -17,15 +17,15 @@
     <legend>Search:</legend>
     <div>
         Enter Director's ID:
-        <form action="/filmsById" method="post">
+        <form action="/filmsById/{id}" method="get">
             <input type="text" name="id" placeholder="${id!}">
             <button type="submit">Search By Id</button>
         </form>
     </div>
     <div>
         Enter Date:
-        <form action="/filmsByDate" method="post">
-            <input type="text" name="date" placeholder="${info!}">
+        <form action="/filmsByDate/{date}" method="get">
+            <input type="date" pattern="yyyyMMdd" name="date" placeholder="${info!}">
             <button type="submit">Search By Date</button>
         </form>
         <br>

@@ -12,14 +12,14 @@
 <fieldset>
     <legend>Search:</legend>
     <div>
-        <form action="/filmsByIdAndDate" method="post">
+        <form action="/filmsByIdAndDate/{id}{date}" method="get">
             Enter Director's ID:
             <div>
                 <input type="text" name="id" placeholder="${info!}">
             </div>
             Enter Date:
             <div>
-                <input type="text" name="date" placeholder="${info!}">
+                <input type="date" pattern="yyyyMMdd" name="date" placeholder="${info!}">
                 <button type="submit">Search</button>
             </div>
         </form>

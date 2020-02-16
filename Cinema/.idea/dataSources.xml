@@ -7,5 +7,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/cinema</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="Cinema@localhost" uuid="a74da328-82e0-454c-bbb1-403c3549ce5b">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/Cinema</jdbc-url>
+    </data-source>
   </component>
 </project>

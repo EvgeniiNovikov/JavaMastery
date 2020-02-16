@@ -1,14 +1,13 @@
 package cinema.controllers;
 
-import cinema.models.Director;
-import cinema.models.Film;
-import cinema.servises.DataService;
+import cinema.jpa.models.Director;
+import cinema.jpa.models.Film;
+import cinema.servises.DirectorService;
+import cinema.servises.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,38 +15,45 @@ import java.util.List;
 public class FilmController {
 
     @Autowired
-    private DataService dataService;
+    private DirectorService directorService;
 
-    @GetMapping("/")
+    @Autowired
+    private FilmService filmService;
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String start(Model model) {
-        model.addAttribute("director", dataService.getAll());
+        model.addAttribute("director", directorService.getAll());
         return "start";
     }
 
-    @GetMapping("/all")
+
+    @RequestMapping(value = "/films/all", method = RequestMethod.GET)
     public String getAll(Model model) {
-        List<Director> all = dataService.getAll();
+        List<Director> all = directorService.getAll();
         model.addAttribute("users", all);
 
         return "allFilms";
     }
 
-    @GetMapping("/form_test")
+
+    @RequestMapping(value = "/filmsById&Date", method = RequestMethod.GET)
     public String form_test() {
         return "form_test";
     }
 
-    @GetMapping("/forms")
+
+    @RequestMapping(value = "/filmsByIdOrDate", method = RequestMethod.GET)
     public String getFilms() {
         return "forms";
     }
 
-    @PostMapping("/filmsById")
-    public String getDirector(Model model, @RequestParam("id") String id) {
+
+    @RequestMapping(value = "/filmsById/{id}", method = RequestMethod.GET)
+    public String getDirector(Model model, @PathVariable @RequestParam("id") String id) {
         if (id == null || id.isEmpty()) {
             model.addAttribute("id", "ID can't be empty!");
-        } else if (dataService.check(id)) {
-            List<Director> dir = dataService.findById(Integer.parseInt(id));
+        } else if (directorService.check(id)) {
+            List<Director> dir = directorService.findById(Integer.parseInt(id));
             model.addAttribute("director", dir);
         } else {
             model.addAttribute("id", "Incorrect data");
@@ -56,27 +62,31 @@ public class FilmController {
         return "forms";
     }
 
-    @PostMapping("/filmsByDate")
-    public String getFilmByDate(Model model, @RequestParam("date") String date) {
+
+    @RequestMapping(value = "/filmsByDate/{date}", method = RequestMethod.GET)
+    public String getFilmByDate(Model model, @PathVariable @RequestParam("date") String date) {
         if (date == null || date.isEmpty()) {
-            model.addAttribute("info", "Date can't be empty!");
-        } else if(dataService.check(date)) {
-            List<Film> films = dataService.findByDate(date);
+            model.addAttribute("info", "Incorrect data");
+        } else {
+            String result = filmService.parseStringDate(date);
+            List<Film> films = filmService.findByDate(result);
             model.addAttribute("films", films);
             model.addAttribute("date", date);
-        } else {
-            model.addAttribute("info", "Incorrect data");
         }
 
         return "forms";
     }
 
-    @PostMapping("/filmsByIdAndDate")
-    public String findByDateAndId(@RequestParam("date") String date, @RequestParam("id") String id, Model model) {
+
+    @RequestMapping(value = "/filmsByIdAndDate/{id}{date}", method = RequestMethod.GET)
+    public String findByDateAndId(@PathVariable @RequestParam("date") String date,
+                                  @PathVariable @RequestParam("id") String id,
+                                  Model model) {
         if (date == null || date.isEmpty() || id == null || id.isEmpty()) {
             model.addAttribute("info", "Field's can't be empty!");
-        } else if (dataService.check(id) && dataService.check(date)) {
-            List<Film> films = dataService.findFilmsByIdAndDate(Integer.parseInt(id), date);
+        } else if (directorService.check(id)) {
+            String result = filmService.parseStringDate(date);
+            List<Film> films = filmService.findFilmsByIdAndDate(Integer.parseInt(id), result);
             model.addAttribute("films", films);
         } else {
            model.addAttribute("info", "Incorrect data");

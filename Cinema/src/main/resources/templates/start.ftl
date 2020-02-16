@@ -29,13 +29,13 @@
 </fieldset>
 
 <div>
-    <a href="/forms">Find Films By ID or Date</a>
+    <a href="/filmsByIdOrDate">Find Films By ID or Date</a>
 </div>
 <div>
-    <a href="/form_test">Find Films By ID and Date</a>
+    <a href="/filmsById&Date">Find Films By ID and Date</a>
 </div>
 <div>
-    <a href="/all">All Films and Directors</a>
+    <a href="/films/all">All Films and Directors</a>
 </div>
 </body>
 </html>
