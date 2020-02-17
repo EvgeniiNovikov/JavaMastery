@@ -21,12 +21,4 @@ public class DirectorService {
         return directorRepo.findById(id).orElse(null);
     }
 
-    public boolean check(String data) {
-        try {
-            Integer.parseInt(data);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
 }
