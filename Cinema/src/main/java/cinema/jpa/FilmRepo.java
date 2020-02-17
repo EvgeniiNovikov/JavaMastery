@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface FilmRepo extends JpaRepository<Film, Long> {
 
-    @Query("select f from Film f where f.release_date > '00010101' and f.release_date <= ?1")
-    List<Film> findByDate(Date date);
+    @Query("select f from Film f where f.release_date > ?1 and f.release_date <= ?2")
+    List<Film> findByDate(Date from, Date to);
 
-    @Query("select f from Film f where f.director.id = ?1 and f.release_date > '19700101' and f.release_date <= ?2")
-    List<Film> findByIdAndDate(Integer id, Date date);
+    @Query("select f from Film f where f.director.id = ?1 and f.release_date > ?2 and f.release_date <= ?3")
+    List<Film> findByDirectorAndDate(Long id, Date from, Date to);
 }

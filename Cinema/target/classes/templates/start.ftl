@@ -17,26 +17,26 @@
 <h10>Welcome to Cinema Database</h10>
 <fieldset>
     <legend>Director's list</legend>
-    <#if director??>
-    <#list director as dir>
+    <#if directors??>
+    <#list directors as dir>
         <div>
+            <a href="/directors/${dir.id}">
             ${dir.id}
             ${dir.first_name}
             ${dir.last_name}
+            </a>
         </div>
+
     </#list>
     </#if>
+    <br>
+    <div>
+        <form action="/" method="get">
+            <button type="submit">Back to Main</button>
+        </form>
+    </div>
 </fieldset>
 
-<div>
-    <a href="/filmsByIdOrDate">Find Films By ID or Date</a>
-</div>
-<div>
-    <a href="/filmsById&Date">Find Films By ID and Date</a>
-</div>
-<div>
-    <a href="/films/all">All Films and Directors</a>
-</div>
 </body>
 </html>
 

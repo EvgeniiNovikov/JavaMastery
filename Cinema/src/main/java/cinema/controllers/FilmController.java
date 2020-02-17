@@ -1,40 +1,67 @@
 package cinema.controllers;
 
-import cinema.jpa.models.Director;
 import cinema.jpa.models.Film;
-import cinema.servises.DirectorService;
 import cinema.servises.FilmService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 @Controller
+@RequestMapping("/movies")
 public class FilmController {
-
-    @Autowired
-    private DirectorService directorService;
 
     @Autowired
     private FilmService filmService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String start(Model model) {
-        model.addAttribute("director", directorService.getAll());
-        return "start";
-    }
-
-
-    @RequestMapping(value = "/films/all", method = RequestMethod.GET)
-    public String getAll(Model model) {
-        List<Director> all = directorService.getAll();
-        model.addAttribute("users", all);
-
+    @RequestMapping(method = RequestMethod.GET)
+    public String getMovies(Model model) {
+        List<Film> films = filmService.getAll();
+        model.addAttribute("films", films);
         return "allFilms";
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public String findById(@PathVariable Long id, Model model) {
+        Film film = filmService.findById(id);
+        if (Objects.isNull(film)) {
+            log.error("Film not found. ID: {}", id);
+//            throw new IllegalArgumentException(String.format("Film with received ID [%d] not found", id));
+        }
+        model.addAttribute("film", film);
+        return "selectedFilm";
+    }
+
+    @RequestMapping(value = "/date", method = RequestMethod.GET)
+    public String findByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
+                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable(required = false) Date to, Model model) {
+        to = to == null ? new Date() : to;
+        List<Film> films = filmService.findByDate(from, to);
+        model.addAttribute("films", films);
+        return "forms";
+    }
+
+    @RequestMapping(value = "/director/{id}/date", method = RequestMethod.GET)
+    public String findByDirectorAndDate(@PathVariable @RequestParam("id") Long id,
+                                        @RequestParam(required = false)
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
+                                        @RequestParam(required = false)
+                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date to, Model model) {
+        to = to == null ? new Date() : to;
+        List<Film> films = filmService.findByDirectorAndDate(id, from, to);
+        model.addAttribute("films", films);
+        return "form_test";
+    }
 
     @RequestMapping(value = "/filmsById&Date", method = RequestMethod.GET)
     public String form_test() {
@@ -42,57 +69,9 @@ public class FilmController {
     }
 
 
-    @RequestMapping(value = "/filmsByIdOrDate", method = RequestMethod.GET)
+    @RequestMapping(value = "/filmsByDate", method = RequestMethod.GET)
     public String getFilms() {
         return "forms";
-    }
-
-
-    @RequestMapping(value = "/filmsById/{id}", method = RequestMethod.GET)
-    public String getDirector(Model model, @PathVariable @RequestParam("id") String id) {
-        if (id == null || id.isEmpty()) {
-            model.addAttribute("id", "ID can't be empty!");
-        } else if (directorService.check(id)) {
-            List<Director> dir = directorService.findById(Integer.parseInt(id));
-            model.addAttribute("director", dir);
-        } else {
-            model.addAttribute("id", "Incorrect data");
-        }
-
-        return "forms";
-    }
-
-
-    @RequestMapping(value = "/filmsByDate/{date}", method = RequestMethod.GET)
-    public String getFilmByDate(Model model, @PathVariable @RequestParam("date") String date) {
-        if (date == null || date.isEmpty()) {
-            model.addAttribute("info", "Incorrect data");
-        } else {
-            String result = filmService.parseStringDate(date);
-            List<Film> films = filmService.findByDate(result);
-            model.addAttribute("films", films);
-            model.addAttribute("date", date);
-        }
-
-        return "forms";
-    }
-
-
-    @RequestMapping(value = "/filmsByIdAndDate/{id}{date}", method = RequestMethod.GET)
-    public String findByDateAndId(@PathVariable @RequestParam("date") String date,
-                                  @PathVariable @RequestParam("id") String id,
-                                  Model model) {
-        if (date == null || date.isEmpty() || id == null || id.isEmpty()) {
-            model.addAttribute("info", "Field's can't be empty!");
-        } else if (directorService.check(id)) {
-            String result = filmService.parseStringDate(date);
-            List<Film> films = filmService.findFilmsByIdAndDate(Integer.parseInt(id), result);
-            model.addAttribute("films", films);
-        } else {
-           model.addAttribute("info", "Incorrect data");
-        }
-
-        return "form_test";
     }
 
 }

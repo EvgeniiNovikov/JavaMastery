@@ -17,8 +17,8 @@ public class DirectorService {
         return directorRepo.findAll();
     }
 
-    public List<Director> findById(Integer id) {
-        return directorRepo.findDirectorById(id);
+    public Director findById(Long id) {
+        return directorRepo.findById(id).orElse(null);
     }
 
     public boolean check(String data) {

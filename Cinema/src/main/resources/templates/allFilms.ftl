@@ -13,29 +13,28 @@
 <div align="center">
     <fieldset>
         <table border="1">
-            <legend>Directors</legend>
+            <legend>Movies</legend>
             <thead>
             <tr>
                 <td>ID</td>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Birth Date</td>
-                <td>Films</td>
+                <td>Name</td>
+                <td>Genre</td>
+                <td>Release Date</td>
+                <td>Director</td>
             </tr>
             </thead>
-            <#list users as user>
+            <#list films as film>
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.first_name}</td>
-                    <td>${user.last_name}</td>
-                    <td>${user.birth_date}</td>
-                    <td>
-                        <#list user.films as film>
-                            <div>
-                                ${film.toString()}
-                            </div>
-                        </#list>
+
+                    <td>${film.id}</td>
+                    <td><a href="/movies/${film.id}">
+                            ${film.name}
+                        </a>
                     </td>
+                    <td>${film.genre}</td>
+                    <td>${film.release_date}</td>
+                    <td><a href="/directors/${film.director.id}">
+                    ${film.director.first_name + " " + film.director.last_name}</a></td>
                 </tr>
             </#list>
         </table>

@@ -12,15 +12,26 @@
 <fieldset>
     <legend>Search:</legend>
     <div>
-        <form action="/filmsByIdAndDate/{id}{date}" method="get">
+        <form action="/movies/director/{id}/date" method="get">
             Enter Director's ID:
             <div>
-                <input type="text" name="id" placeholder="${info!}">
+                <input type="number" name="id">
             </div>
-            Enter Date:
+            Enter Date from:
             <div>
-                <input type="date" pattern="yyyyMMdd" name="date" placeholder="${info!}">
-                <button type="submit">Search</button>
+                <div>
+                    <input type="date" pattern="yyyyMMdd" name="from">
+                </div>
+            </div>
+            Enter Date to:
+            <div>
+                <div>
+                    <input type="date" pattern="yyyyMMdd" name="to">
+                </div>
+                <div>
+                    <br>
+                    <button type="submit">Search</button>
+                </div>
             </div>
         </form>
     </div>
@@ -28,9 +39,15 @@
     <#if films??>
         <#list films as film>
             <div>
-                ${film.toString()}
-                ${film.director.first_name}
-                ${film.director.last_name}
+                <a href="/movies/${film.id}">
+                    ${film.name}
+                </a>
+                ${film.genre}
+                ${film.release_date}
+                <a href="/directors/${film.director.id}">
+                    ${film.director.first_name}
+                    ${film.director.last_name}
+                </a>
             </div>
         </#list>
     </#if>

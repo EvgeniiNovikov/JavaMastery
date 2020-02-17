@@ -9,7 +9,7 @@ import java.util.List;
 public class Director {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String first_name;
     private String last_name;
     private Date birth_date;
@@ -21,11 +21,11 @@ public class Director {
     public Director() {
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
