@@ -45,7 +45,7 @@ public class FilmController {
     @RequestMapping(value = "/date", method = RequestMethod.GET)
     public String findByDate(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable(required = false) Date to, Model model) {
-        to = to == null ? new Date() : to;
+        to = Objects.isNull(to) ? new Date() : to;
         List<Film> films = filmService.findByDate(from, to);
         model.addAttribute("films", films);
         return "forms";
@@ -57,7 +57,7 @@ public class FilmController {
                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
                                         @RequestParam(required = false)
                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date to, Model model) {
-        to = to == null ? new Date() : to;
+        to = Objects.isNull(to) ? new Date() : to;
         List<Film> films = filmService.findByDirectorAndDate(id, from, to);
         model.addAttribute("films", films);
         return "form_test";
